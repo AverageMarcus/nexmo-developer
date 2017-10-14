@@ -33,12 +33,12 @@ Use the `record` action to record a Call or part of a Call:
 [
   {
     "action": "record",
-    "eventUrl": ["https://example.com/recordings"],
+    "eventURL": ["https://example.com/recordings"],
     "endOnSilence": "3"
   },
   {
     "action": "connect",
-    "eventUrl": ["https://example.com/events"],
+    "eventURL": ["https://example.com/events"],
     "from":"447700900000",
     "endpoint": [
       {
@@ -63,11 +63,11 @@ Option | Description | Required
 `endOnKey` | Stop recording when a digit is pressed on the handset. Possible values are: `*`, `#` or any single digit e.g. `9` | No
 `timeOut` | The maximum length of a recording in seconds. One the recording is stopped the recording data is sent to *event_url*. The range of possible values is between `3` seconds and `7200` seconds (2 hours) | No
 `beepStart` | Set to *true* to play a beep when a recording starts | No
-`eventUrl` | The URL to the webhook endpoint that is called asynchronously when a recording is finished. If the message recording is hosted by Nexmo, this webhook contains the [URL you need to download the recording and other meta data](#recording_return_parameters). | No
-`eventMethod` | The HTTP method used to make the request to `eventUrl`. The default value is `POST`. | No
+`eventURL` | The URL to the webhook endpoint that is called asynchronously when a recording is finished. If the message recording is hosted by Nexmo, this webhook contains the [URL you need to download the recording and other meta data](#recording_return_parameters). | No
+`eventMethod` | The HTTP method used to make the request to `eventURL`. The default value is `POST`. | No
 
 <a name="recording_return_parameters"></a>
-The following example shows the return parameters sent to `eventUrl`:
+The following example shows the return parameters sent to `eventURL`:
 
 ```json
 {
@@ -112,8 +112,8 @@ Option | Description | Required
 `startOnEnter` | The default value of *true* ensures that the conversation starts when this caller joins  conversation [name](#conversation_name). Set to *false* for attendees in a moderated conversation. | no
 `endOnExit` | For moderated conversations, set to *true* in the moderator NCCO so the conversation is ended when the moderator hangs up. The default value of *false* means the conversation is not terminated when a caller hangs up; the conversation ends when the last caller hangs up. | no
 `record` | Set to *true* to record this conversation. For standard conversations, recordings start when one or more attendees connects to the conversation. For moderated conversations, recordings start when the moderator joins. That is, when an NCCO is executed for the named conversation where *startOnEnter* is set to *true*. When the recording is terminated, the URL you download the recording from is sent to the event URL. <br>By default audio is recorded in MP3 format. See [Recording calls and conversations](/voice/guides/record-calls-and-conversations). | No
-`eventUrl` | Set the URL to the webhook endpoint Nexmo calls asynchronously on each of the call [states](/api/voice#status). | No
-`eventMethod` | Set the HTTP method used to make the request to `eventUrl`. The default value is POST. | No
+`eventURL` | Set the URL to the webhook endpoint Nexmo calls asynchronously on each of the call [states](/api/voice#status). | No
+`eventMethod` | Set the HTTP method used to make the request to `eventURL`. The default value is POST. | No
 
 <a name="connect"></a>
 ## Connect
@@ -128,12 +128,12 @@ Option | Description | Required
 -- | -- | --
 `endpoint` | Connect to a single endpoint. @[Possible Types](/_modals/voice/guides/ncco-reference/endpoint.md) | Yes
 `from` | A number in [E.164](https://en.wikipedia.org/wiki/E.164) format that identifies the caller.§§ This must be one of your Nexmo virtual numbers, another value will result in the caller ID being unknown. | No
-`eventType` | Set to `synchronous` to: <ul markdown="1"><li>make the `connect` action synchronous</li><li>enable `eventUrl` to return an NCCO that overrides the current NCCO when a call moves to specific states. See the [Connect with fallback NCCO example](#connect_fallback).</li></ul> | No
+`eventType` | Set to `synchronous` to: <ul markdown="1"><li>make the `connect` action synchronous</li><li>enable `eventURL` to return an NCCO that overrides the current NCCO when a call moves to specific states. See the [Connect with fallback NCCO example](#connect_fallback).</li></ul> | No
 `timeout` |  If the call is unanswered, set the number in seconds before Nexmo stops ringing `endpoint`. The default value is `60`.
 `limit` | Maximum length of the call in seconds. The default and maximum value is `7200` seconds (2 hours). | No
 `machineDetection` | Configure the behavior when Nexmo detects that a destination is an answerphone. Set to either: <ul markdown="1"><li>`continue` - Nexmo sends an HTTP request to `event_url` with the Call event `machine`</li><li>`hangup` - end the Call</li></ul>   |
-`eventUrl` | Set the webhook endpoint that Nexmo calls asynchronously on each of the possible [Call states](/api/voice#status). If `eventType` is set to `synchronous` the `eventUrl` can return an NCCO that overrides the current NCCO when a timeout occurs. | No
-`eventMethod` | The HTTP method Nexmo uses to make the request to <i>eventUrl</i>. The default value is `POST`. | No
+`eventURL` | Set the webhook endpoint that Nexmo calls asynchronously on each of the possible [Call states](/api/voice#status). If `eventType` is set to `synchronous` the `eventURL` can return an NCCO that overrides the current NCCO when a timeout occurs. | No
+`eventMethod` | The HTTP method Nexmo uses to make the request to <i>eventURL</i>. The default value is `POST`. | No
 
 ### Examples
 
@@ -155,7 +155,7 @@ The following NCCO examples show how to configure different types of connection:
   },
   {
     "action": "connect",
-    "eventUrl": ["https://example.com/events"],
+    "eventURL": ["https://example.com/events"],
     "timeout": "45",
     "from": "447700900000",
     "endpoint": [
@@ -179,7 +179,7 @@ The following NCCO examples show how to configure different types of connection:
   },
   {
     "action": "connect",
-    "eventUrl": [
+    "eventURL": [
       "https://example.com/events"
     ],
     "from": "447700900000",
@@ -198,7 +198,7 @@ The following NCCO examples show how to configure different types of connection:
 
 #### Connect with fallback NCCO
 
-You can provide a fallback for Calls that do not connect. To do this set the `eventType` to `synchronous` and return an NCCO from the `eventUrl` if the Call enters any of the following states:
+You can provide a fallback for Calls that do not connect. To do this set the `eventType` to `synchronous` and return an NCCO from the `eventURL` if the Call enters any of the following states:
 
 * `timeout` - your user did not answer your call with `ringing_timer` seconds
 * `failed` - the call failed to complete
@@ -213,7 +213,7 @@ You can provide a fallback for Calls that do not connect. To do this set the `ev
     "from": "447700900000",
     "timeout": 5,
     "eventType": "synchronous",
-    "eventUrl": [
+    "eventURL": [
       "https://example.com/event-fallback"
     ],
     "endpoint": [
@@ -236,7 +236,7 @@ You can provide a fallback for Calls that do not connect. To do this set the `ev
   },
   {
     "action": "connect",
-    "eventUrl": [
+    "eventURL": [
       "https://example.com/events"
     ],
     "from": "447700900000",
@@ -256,11 +256,11 @@ You can provide a fallback for Calls that do not connect. To do this set the `ev
 [
   {
     "action": "record",
-    "eventUrl": ["https://example.com/recordings"]
+    "eventURL": ["https://example.com/recordings"]
   },
   {
     "action": "connect",
-    "eventUrl": ["https://example.com/events"],
+    "eventURL": ["https://example.com/events"],
     "from": "447700900000",
     "endpoint": [
       {
@@ -412,7 +412,7 @@ The following NCCO example shows how to configure an IVR endpoint:
   },
   {
     "action": "input",
-    "eventUrl": ["https://example.com/ivr"]
+    "eventURL": ["https://example.com/ivr"]
   }
 ]
 ```
@@ -428,7 +428,7 @@ The following NCCO example shows how to use `bargeIn` to allow a user to interru
   },
   {
     "action": "input",
-    "eventUrl": ["https://example.com/ivr"]
+    "eventURL": ["https://example.com/ivr"]
   }
 ]
 ```
@@ -437,13 +437,13 @@ The following options can be used to control an `input` action:
 
 Option | Description | Required
 -- | -- | --
-`timeOut` | The result of the callee's activity is sent to the `eventUrl` webhook endpoint `timeOut` seconds after the last action. The default value is *3*. | No
+`timeOut` | The result of the callee's activity is sent to the `eventURL` webhook endpoint `timeOut` seconds after the last action. The default value is *3*. | No
 `maxDigits` | The number of digits the user can press. The maximum value is 20. | No
-`submitOnHash` | Set to `true` so the callee's activity is sent to your webhook endpoint at `eventUrl` after he or she presses *#*. If *#* is not pressed the result is submitted after `timeOut` seconds. The default value is `false`. That is, the result is sent to your webhook endpoint after `timeOut` seconds. | No
-`eventUrl` | Nexmo sends the digits pressed by the callee to this URL after `timeOut` pause in activity or when *#* is pressed.  | No
+`submitOnHash` | Set to `true` so the callee's activity is sent to your webhook endpoint at `eventURL` after he or she presses *#*. If *#* is not pressed the result is submitted after `timeOut` seconds. The default value is `false`. That is, the result is sent to your webhook endpoint after `timeOut` seconds. | No
+`eventURL` | Nexmo sends the digits pressed by the callee to this URL after `timeOut` pause in activity or when *#* is pressed.  | No
 `eventMethod` | The HTTP method used to send event information to `event_url` The default value is POST.| No
 
-The following example shows the parameters sent to `eventUrl`:
+The following example shows the parameters sent to `eventURL`:
 
 ```json
 {
@@ -454,7 +454,7 @@ The following example shows the parameters sent to `eventUrl`:
 }
 ```
 
-Possible *input* webhook parameters send to the `eventUrl` are:
+Possible *input* webhook parameters send to the `eventURL` are:
 
 Name | Description
 -- | --
